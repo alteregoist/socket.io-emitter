@@ -102,7 +102,7 @@ Emitter.prototype.to = function(room){
 Emitter.prototype.except = function(except) {
   if (!~this._except.indexOf(except)) {
     debug('except %s', except);
-    this._rooms.push(except);
+    this._except.push(except);
   }
   return this;
 };
