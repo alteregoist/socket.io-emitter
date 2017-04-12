@@ -68,6 +68,7 @@ function Emitter(redis, opts){
   this.prefix = (opts.key || 'socket.io');
 
   this._rooms = [];
+  this._except = [];
   this._flags = {};
 }
 
@@ -94,6 +95,14 @@ Emitter.prototype.to = function(room){
   if (!~this._rooms.indexOf(room)) {
     debug('room %s', room);
     this._rooms.push(room);
+  }
+  return this;
+};
+
+Emitter.prototype.except = function(except) {
+  if (!~this._except.indexOf(except)) {
+    debug('except %s', except);
+    this._rooms.push(except);
   }
   return this;
 };
@@ -134,6 +143,7 @@ Emitter.prototype.emit = function(){
 
   var opts = {
     rooms: this._rooms,
+    except: this._except,
     flags: this._flags
   };
   var chn = this.prefix + '#' + packet.nsp + '#';
@@ -151,6 +161,7 @@ Emitter.prototype.emit = function(){
 
   // reset state
   this._rooms = [];
+  this._except = [];
   this._flags = {};
 
   return this;
